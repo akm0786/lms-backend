@@ -64,7 +64,7 @@ const createCourse = async (req, res, next) => {
     createdBy,
     thumbnail: {
       public_id: "dummy",
-      secure_url: "dummy",
+      secure_url: "https://www.vecteezy.com/vector-art/4141669-no-photo-or-blank-image-icon-loading-images-or-missing-image-mark-image-not-available-or-image-coming-soon-sign-simple-nature-silhouette-in-frame-isolated-vector-illustration",
     },
   });
 
