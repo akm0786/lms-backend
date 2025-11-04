@@ -128,7 +128,7 @@ const getProfile = async (req, res, next) => {
     try {
 
         const userId = req.user.id;
-        console.log(userId);
+        // console.log(userId);
 
         const user = await User.findById(userId);
 
@@ -157,7 +157,7 @@ const forgotPassword = async (req, res, next) => {
 
     await user.save();
 
-    const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/user/reset-password/${resetToken}`;
 
     const subject = 'LMS Password Reset';
     const message = `Click <a href="${resetPasswordUrl}">here</a> to reset your password. if this does not work, copy and paste the link ${resetPasswordUrl} into your browser. if you did not request this, please ignore this email.`;
