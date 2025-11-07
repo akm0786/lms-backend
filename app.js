@@ -8,7 +8,8 @@ import userRoutes from './routes/user.routes.js';
 import courseRoutes from './routes/course.routes.js';
 import contactRoute from './routes/contact.routes.js';
 import errorMiddleware from './middleware/error.middleware.js';
-import sendEmail from './utils/sendEmail.js';
+import paymentRoutes from './routes/payment.routes.js';
+
 const app = express();
 app.use(express.json());
 
@@ -24,6 +25,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/user',userRoutes);
 app.use('/api/v1/courses', courseRoutes);
+app.use('/api/v1/payments',paymentRoutes)
 app.use('/api/v1/contact', contactRoute)
 
 app.use('/', (req, res) => {
