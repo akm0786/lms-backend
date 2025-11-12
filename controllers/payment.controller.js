@@ -22,13 +22,14 @@ export const buySubscription = async (req, res, next) => {
             return next(new AppError('Unauthorized, Please login', 404));
         }
 
-        if (user.role === 'admin') {
+        if (user.role === 'ADMIN') {
             return next(new AppError('Admin cannot buy subscription', 400));
         }
 
         const subscription = await razorpay.subscriptions.create({
             plan_id: process.env.ROZERPAY_PLAN_ID,
             customer_notify: 1,
+             total_count: 12, // number of billing cycles
         })
 
         user.subscription.id = subscription.id;
@@ -39,7 +40,8 @@ export const buySubscription = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: "Subscription created successfully",
-            subscription_id: subscription.id
+            subscription_id: subscription.id,
+            subscription:subscription
         })
     } catch (e) {
         return next(new AppError(e.message, 500));
