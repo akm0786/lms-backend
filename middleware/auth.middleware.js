@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import AppError from '../utils/error.util.js';
+import User from '../models/user.model.js';
 const isLoggedIn = (req, res, next) => {
 
     try {
@@ -32,9 +33,10 @@ const authorizeRoles = (...roles) => async (req, res, next) => {
 }
 
 const authorizedSubscriber = async (req, res, next) => {
+    const user = await User.findById(req.user.id);
     const subscription = req.user.subscription;
-    const currentUserRole = req.user.role;
-    if(currentUserRole !== 'ADMIN' && subscription.status !== 'active') {
+    // const currentUserRole = req.user.role;
+    if(user.role !== 'ADMIN' && user.subscription.status !== 'active') {
         return next(new AppError('Please subscribe to access this resource', 403));
     }
     next();

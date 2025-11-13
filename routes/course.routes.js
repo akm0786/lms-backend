@@ -15,12 +15,12 @@ const router = Router();
 
 
 router.route('/')
-    .get(isLoggedIn,authorizedSubscriber, getAllCourses)
+    .get(isLoggedIn, getAllCourses)
     .post(isLoggedIn, authorizeRoles('ADMIN'), upload.single('thumbnail'), createCourse);
 
 router.route('/:id')
-    .get(isLoggedIn, getLecturesByCourseId)
-    .put(isLoggedIn,authorizeRoles('ADMIN'), updateCourse)
+    .get(isLoggedIn, authorizedSubscriber, getLecturesByCourseId)
+    .put(isLoggedIn, authorizeRoles('ADMIN'), updateCourse)
     .delete(isLoggedIn, authorizeRoles('ADMIN'), removeCourse)
     .post(isLoggedIn, authorizeRoles('ADMIN'), upload.single('lecture'), addLectureToCourseById);
 

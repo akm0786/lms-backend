@@ -2,6 +2,7 @@ import Payment from "../models/payment.model.js";
 import User from "../models/user.model.js";
 import { razorpay } from "../server.js";
 import AppError from "../utils/error.util.js";
+import crypto from 'crypto';
 
 export const getRazorpayApiKey = async (req, res, next) => {
     res.status(200).json({
@@ -64,7 +65,7 @@ export const verifySubscription = async (req, res, next) => {
 
         const generatedSignature = crypto
             .createHmac('sha256', process.env.ROZERPAY_SECRET)
-            .update(`${razorpay_payment_id} | ${subscriptionId}`)
+            .update(`${razorpay_payment_id}|${subscriptionId}`)
             .digest('hex');
 
         if (razorpay_signature !== generatedSignature) {
@@ -81,7 +82,7 @@ export const verifySubscription = async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            message: "Paymentverified successfully!",
+            message: "Payment verified successfully!",
         })
     } catch (e) {
         return next(new AppError(e.message, 500));

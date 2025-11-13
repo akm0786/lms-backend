@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { allPayments, buySubscription, cancelSubscription, getRazorpayApiKey, verifySubscription } from "../controllers/payment.controller.js";
-import { authorizeRoles, isLoggedIn } from "../middleware/auth.middleware.js";
+import { authorizedSubscriber, authorizeRoles, isLoggedIn } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
@@ -10,8 +10,8 @@ router.post('/subscribe', isLoggedIn, buySubscription);
 
 router.post('/verify', isLoggedIn, verifySubscription);
 
-router.post('/unsubscribe', isLoggedIn, cancelSubscription);
+router.post('/unsubscribe', isLoggedIn, authorizedSubscriber, cancelSubscription);
 
-router.get('/', isLoggedIn,authorizeRoles('ADMIN'), allPayments)
+router.get('/', isLoggedIn, authorizeRoles('ADMIN'), allPayments)
 
 export default router
