@@ -196,4 +196,60 @@ const addLectureToCourseById = async (req, res, next) => {
 
 }
 
-export { getAllCourses, getLecturesByCourseId, createCourse, updateCourse, removeCourse, addLectureToCourseById };
+const removeLectureFromCourse = async (req, res, next) => {
+  try{
+    const {courseId, lectureId} = req.query;
+
+  if(!courseId)
+  {
+    return next(new AppError('Course id is required', 400));
+  }
+  if(!lectureId)
+  {
+    return next(new AppError('Lecture id is required', 400));
+  }
+
+  const course = await Course.findById(courseId);
+
+  if(!course)
+  {
+    return next(new AppError('Course with given id not found', 404));
+  }
+
+  const lectureIndex = course.lectures.findIndex(
+      (lec) => lec._id.toString() === lectureId
+    );
+
+    if (lectureIndex === -1) {
+      return next(new AppError('Lecture not found in this course', 404));
+    }
+
+    const lecture = course.lectures[lectureIndex];
+    const publicId = lecture.lecture?.public_id;
+
+    // 4. (Optional) Delete video from Cloudinary
+    if (publicId) {
+      try {
+        await cloudinary.uploader.destroy(publicId, { resource_type: 'video' });
+      } catch (cloudErr) {
+        console.warn(`Failed to delete Cloudinary asset ${publicId}:`, cloudErr.message);
+      }
+    }
+
+    course.lectures.splice(lectureIndex, 1);
+
+    course.numberOfLectures = course.lectures.length;
+    await course.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Lecture removed from course successfully',
+      course
+    })
+
+  }catch(e){
+    return next(new AppError('Something went wrong', 500));
+  }
+}
+
+export { getAllCourses, getLecturesByCourseId, createCourse, updateCourse, removeCourse, addLectureToCourseById, removeLectureFromCourse };
