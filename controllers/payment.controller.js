@@ -1,3 +1,4 @@
+import { log } from "console";
 import Payment from "../models/payment.model.js";
 import User from "../models/user.model.js";
 import { razorpay } from "../server.js";
@@ -30,7 +31,7 @@ export const buySubscription = async (req, res, next) => {
         const subscription = await razorpay.subscriptions.create({
             plan_id: process.env.ROZERPAY_PLAN_ID,
             customer_notify: 1,
-             total_count: 12, // number of billing cycles
+            total_count: 12, // number of billing cycles
         })
 
         user.subscription.id = subscription.id;
@@ -42,7 +43,7 @@ export const buySubscription = async (req, res, next) => {
             success: true,
             message: "Subscription created successfully",
             subscription_id: subscription.id,
-            subscription:subscription
+            subscription: subscription
         })
     } catch (e) {
         return next(new AppError(e.message, 500));
@@ -123,22 +124,24 @@ export const cancelSubscription = async (req, res, next) => {
 export const allPayments = async (req, res, next) => {
     try {
         const { count } = req.query;
-       const subscriptions = await razorpay.subscriptions.all({
+        const subscriptions = await razorpay.subscriptions.all({
             count: count || 10
 
         })
-        if(!subscriptions || subscriptions.length === 0 || subscriptions === null || subscriptions === undefined) {
+        if (!subscriptions || subscriptions.length === 0 || subscriptions === null || subscriptions === undefined) {
             return next(new AppError('Subscriptions not found', 404));
         }
-        console.log(subscriptions);
+        // console.log(subscriptions);
 
         res.status(200).json({
             success: true,
             message: "All payments",
-            subscriptions : subscriptions || []
+            subscriptions: subscriptions || []
         })
     } catch (e) {
         return next(new AppError(e.message, 500));
     }
 
 }
+
+
