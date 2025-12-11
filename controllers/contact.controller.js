@@ -25,8 +25,9 @@ const contactController = async (req, res, next) => {
             <p><strong>Name:</strong> ${name}</p>
             <p><strong>Email:</strong> ${email}</p>
             <p><strong>Message:</strong> ${message}</p>
+            <p> <strong>Thank you for your submission we will get back to you soon.</strong> </p>
         `;
-        await sendEmail(email, 'New Contact Form Submission', emailMessage);
+        await sendEmail(email, 'Contact Form Submission', emailMessage);
         // await sendEmail('test@example.com', 'Test Email', '<p>This is a test</p>');
         res.status(200).json({
             success: true,
